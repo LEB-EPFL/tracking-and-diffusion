@@ -27,7 +27,7 @@ The scripts you will need are:
 
 You can find detailed information about how to apply each function within these scripts. The following instructions walk you through the basic steps, but make sure to refer to the commentary within the scripts to correctly choose parameters for your situation. These are often optional parameters and referred to here as “*params”. 
 
-*** naming conventions for the movies
+**naming conventions for the movies**
 
 The scripts read information about the movie from the filenames. The reading is done by a function called read() in load_all_results.py. It has been written for the set of filenames we have been handling, and assumes some conventions. 
 In our data we have converged on the conventions followed by these examples:
@@ -47,7 +47,7 @@ Each bit of information is separated from the others by an underscore ‘_’.
 
 These conventions arose naturally out of the filenames we have. You can extend or generalize them by editing the function read() in load_all_results.py. 
 
-*** starting point: after tracking and before post-processing
+**starting point: after tracking and before post-processing**
 
 During tracking, the code has generated an ‘analysis’ folder. This folder will likely look like this: #insert image
 
@@ -57,7 +57,7 @@ In the directory that corresponds to your final choice of tracking parameters yo
 
 In the post-processing we will use two types of files from tracking: the trajectories and the msds. If you have generated different types of trajectories and msds as you were tuning tracking parameters, you will now need to choose the files that you will process further. Note that you should always use trajectories with ‘filtered’ as a prefix, as those are trajectories where short studs have been removed (see tracking notebook and trackpy tutorial for more details).
 
-*** 0. preparation 
+**0. preparation**
 
 1. You need to have a dedicated data folder that will be your basic directory. Inside this folder you need to be structured as shown in the following image. # add image
 
@@ -70,7 +70,7 @@ In what follows below I will use muNS as an example, when necessary.
 
 For instance, you need to write down the pixel-to-micron conversion as well as the list of all the days for which you have data. If you already have a list and you want to add the data from a new day, you need to update this list. For a full list of experimental parameters, see generate_basic_info.py . 
 
-*** 1. post-processing of spots 
+**1. post-processing of spots** 
 
 1. Fit Gaussian profiles over the movies of interest. These fits can take a long time. It is best to let the computer run them overnight. If you have multiple threads in your computer, use them. I do that by opening multiple python terminals and launching the fits on a subset of movies in each terminal.
 To launch the fits on a set of movies, for example movies from 210323, type 
@@ -112,7 +112,7 @@ saved output: filtered_trajectories_all_with_starting_values_from_simple_Gauss_f
 
 The above filename indicates 450 nm as the threshold for sigma. The filename may vary slightly depending on your choice of optional parameters along the way, which you can read more about in the comments of the script. Again, ‘YYYYMMDD’ shows the day when you ran the last function.
 
-2. post-processing of trajectories 
+**2. post-processing of trajectories** 
 
 load trajectories with 
 `t = load_all_results(‘muNS’, file_specifier, days = [‘new_day’])` 
@@ -141,7 +141,7 @@ Note that you will often use command 2.1 above to load dictionaries of trajector
 
 If you are working with muNS particles you might also want to estimate their size, by measuring their integrated intensity (see also Parry et al, Cell 2014). This involves fitting every bright spot you have found with a Gaussian and calculating the integrated intensity from the fit results. This is described in section 1 above. 
 
-*** 3. post-processing of msds
+**3. post-processing of msds**
 
 load the new imsds
 
@@ -165,7 +165,7 @@ saved output: fit_results_alpha_Dapp_individual_tstart0p21_tend0p84sec.pkl
 
 where the filename here denotes the time frame 0.21 - 0.84 seconds. 
 
-*** 4. combine all results per movie for quantities that characterize each particle
+**4. combine all results per movie for quantities that characterize each particle**
 
 load the renamed trajectories
 
@@ -191,12 +191,12 @@ saved output: 'combined_results_per_particle_' + label + '.pkl'
 
 where you have the choice to add a specification to the filename at the function input with ‘label’.
 
-*** 5. check movie-to-movie and day-to-day variability. 
+**5. check movie-to-movie and day-to-day variability**
 
 This you can do by plotting histograms of the fit results, for instance, and comparing across movies and days. I can hand over functions that I have written to do that in the near future, but it does not matter how do you do it.
 If variability is ok, you can combine data from all movies together into a single DataFrame, as described in section 6 below. 
 
-*** 6. pool data 
+**6. pool data**
 
 1. If this is the first time you handle this data, or if you are adding a new day’s worth of data, or if you want to start including a new experimental parameter (such as a strain that you had not been considering before), you will first need to define the categories into which movies will be grouped. For more information on this, see the comments in the functions we call below. These are all in collect_results.py. Since the file we generate from now on are relevant for all data of this type, they will be saved in the central folder for the type of spot you are processing (e.x. in folder _muNS/ shown in part 0).
 
@@ -242,7 +242,7 @@ Here ‘file_type’ will typically be trajectories or the msds. The script cont
 
 You are now ready to manipulate this collective data as you wish, make histograms, heatmaps, or visualize it in other helpful ways. 
 
-*** 7. filter particles (optional)
+**7. filter particles (optional)**
 
 In this step you can filter out particles that have so far been associated with an unphysical value for some parameter. For instance, you can remove from your analysis particles with D_app < 0 or with a NaN value in any of the entries. For a complete list of the filtering criteria, see the comments inside the filter functions mentioned below. The process goes as follows:
 
@@ -284,7 +284,7 @@ filter them
 
 save these pooled and filtered msds in the same location as the per-particle results with numpy.save(). You can use this as a matching “master” dictionary of DataFrames that you will refer to for all your further analysis and plots.  
 
-*** 8. bin data by particle size (muNS)
+**8. bin data by particle size (muNS)**
 
 You will typically do this for the data frames that have all results per particle (D_app, α, particle size, etc). This is the data frame you get after step 4.3 above. In our analysis I binned after pooling data over all days. 
 To do this, once you have loaded a pooled DataFrame (it could be the master DataFrame you saved above, we will call it df), use 
@@ -296,9 +296,9 @@ This function currently has default bins, based on the distribution of particle 
 
 The output, binned_df, is a dictionary of two levels: at a first level, the data is split according to size bin, and then within each bin the data is split according to the condition. You can save this dictionary of DataFrames next to your other “master” DataFrames, if you are satisfied with your choice of bins.
 
-Appendix: example lines of code
+**Appendix: example lines of code**
 
-*** 1. post-processing of trajectories
+**1. post-processing of trajectories**
 
 `run load_all_results.py
 
@@ -310,7 +310,7 @@ t_snr = append_starting_snr_to_traj(‘muNS’, t)
 
 t_renamed = rename_particles_in_traj(t_snr, ‘muNS’)` 
 
-*** 2. post-processing of spots
+**2. post-processing of spots**
 
 `run process_spots.py
 
@@ -324,7 +324,7 @@ t = append_starting_fit_values_to_traj(‘muNS’, t, label = ‘simple’)
 
 t = filter_by_width(‘muNS’, t, width_limit = 0.450, label1 = 'simple', label2 = 'by_ave_sigma')`
 
-*** 3. post-processing of msds
+**3. post-processing of msds**
 
 `ims = load_all_results.load_all_results(‘muNS’, [‘imsds, stub_length020’, ‘snr_greater_than_1p0’, ‘until_lag_299’, ‘all’], days = [‘201004’])
 
@@ -334,7 +334,7 @@ ims_renamed = rename_particles_in_imsds(ims, ‘muNS’)
 
 f = fit_imsds_within_time_range(‘muNS’, ims_renamed, t_start=0.21, t_end=4 * 0.21)`
 
-*** 4. combine all results per movie for quantities that characterize each particle
+**4. combine all results per movie for quantities that characterize each particle**
 
 `t = load_all_results.load_all_results(‘muNS’, ‘filtered_trajectories_all_renamed.pkl’)
 
@@ -342,7 +342,7 @@ f = load_all_results(‘muNS’, ‘fit_results_alpha_Dapp_individual_tstart0p21
 
 c = combine_particle_results(t, f, ‘muNS’, label = ‘tstart0p21_tend0p84sec’, transfer_columns = ['starting_snr', 'average_starting_magnitude', 'average_starting_offset', 'below_diffraction_limit'])`
 
-*** 6. pool data
+**6. pool data**
 
 `run collect_results.py
 
@@ -362,7 +362,7 @@ then pool:
 
 `t_pooled = pool(‘muNS’, t, 0, per_day = False, ignore_timelag = False, days = 'all_days', starvation_times = 'all', load = False, avoid = None)`
 
-*** 7. filter particles (optional)
+**7. filter particles (optional)**
 
 start with the dictionary of all DataFrames that contain the results per particle, for all the movies:
 `r = load_all_results.load_all_results('muNS', ‘filtered_trajectories_all_renamed’)
@@ -388,7 +388,7 @@ filter them:
 save: 
 `numpy.save(‘/Volumes/GlennGouldMac/PolyP/papers/ours/data/data_bank/210712_origins_filtered_pooled_results_per_particle.npy', ims_pooled_filtered)` again choose your own path and filename here
 
-*** 8. bin DataFrames by particle size (only relevant for muNS)
+**8. bin DataFrames by particle size (only relevant for muNS)**
 
 `binned_df = bin_dataframe(df, 'particle_size', below_size_limit_only = True, quantiles = False)` 
 
