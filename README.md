@@ -4,6 +4,13 @@ Step-by-step guide for processing the trajectories you have acquired with the tr
 
 This guide includes details relevant for the present work, which includes on two types of fluorescent spots: chromosome origins and muNS. These two types of spots are processed in slightly different ways.
 
+## part 1: extracting trajectories from movies
+For instructions on obtaining trajectories from raw movies, see the jupyter notebook. \\
+The notebook walks you through choosing the right tracking parameters for your data. \\
+Once you have found those, and you have confirmed that they are applicable to all your data, you can track several movies in batch using tracking_automated.py. \\
+At the end of this, you will have a DataFrame of trajectores for each movie, that you can post-process as outlined below. 
+
+## part 2: post-processing of trajectories
 ## general structure
 
 The main steps are:
